@@ -19,6 +19,7 @@ fi
 wget -O pulsar "$LATEST_RELEASE_URL"
 chmod +x pulsar
 sudo mv pulsar /usr/local/bin/
+sudo rm -rf $HOME/.config/pulsar
 /usr/local/bin/pulsar init
 
 cat <<EOF | sudo tee "$SERVICE_FILE" > /dev/null
