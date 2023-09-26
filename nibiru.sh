@@ -9,15 +9,21 @@ is_valid_moniker() {
         return 1
     fi
 }
-
+#
 sudo apt update
 sudo apt upgrade --yes
 
-NIBIRU_INSTALLED_VERSION=$(curl -s "https://github.com/NibiruChain/nibiru/releases" | grep -oE "v[0-9]+\.[0-9]+\.[0-9]+" | head -n 1
-)
-if [[ "$NIBIRU_INSTALLED_VERSION" != "$NIBIRU_VERSION" ]]; then
+NIBIRU_VERSION=$(curl -s "https://github.com/NibiruChain/nibiru/releases" | grep -oE "v[0-9]+\.[0-9]+\.[0-9]+" | head -n 1)
+
+NIBIRU_INSTALL_SCRIPT="https://get.nibiru.fi/@${NIBIRU_VERSION}!"
+curl -s "$NIBIRU_INSTALL_SCRIPT" | bash
+
+NIBIRU_INSTALLED_VERSION=$(nibid version)
+echo "$NIBIRU_INSTALLED_VERSION"
+if [[ "v$NIBIRU_INSTALLED_VERSION" != "$NIBIRU_VERSION" ]]; then
     echo "WARNING: Nibiru version ($NIBIRU_INSTALLED_VERSION) does not match the installed version ($NIBIRU_VERSION)"
 fi
+
 while true; do
   read -p "Enter the moniker name (starts with an uppercase letter, contains only letters and numbers, not longer than 15 characters): " moniker
 
@@ -51,6 +57,7 @@ EOF
     systemctl daemon-reload
     systemctl start nibiru
     systemctl enable nibiru
+    break
   else
     echo "Invalid moniker name. Please use ONLY letters and numbers"
   fi
