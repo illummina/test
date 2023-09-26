@@ -13,15 +13,8 @@ is_valid_moniker() {
 sudo apt update
 sudo apt upgrade --yes
 
-NIBIRU_VERSION=$(curl -s https://get.nibiru.fi/latest)
-if [ -z "$NIBIRU_VERSION" ]; then
-    echo "Failed to fetch the latest Nibiru version"
-    exit 1
-fi
-
-curl -s "https://get.nibiru.fi/@${NIBIRU_VERSION}!" | bash
-
-NIBIRU_INSTALLED_VERSION=$(nibid version)
+NIBIRU_INSTALLED_VERSION=$(curl -s "https://github.com/NibiruChain/nibiru/releases" | grep -oE "v[0-9]+\.[0-9]+\.[0-9]+" | head -n 1
+)
 if [[ "$NIBIRU_INSTALLED_VERSION" != "$NIBIRU_VERSION" ]]; then
     echo "WARNING: Nibiru version ($NIBIRU_INSTALLED_VERSION) does not match the installed version ($NIBIRU_VERSION)"
 fi
