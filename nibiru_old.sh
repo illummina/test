@@ -39,6 +39,7 @@ nibid keys add wallet --recover
 ##Команда запросит указать пароль, а затем выдаст мнемоник фразу, которую нужно будет обязательно сохранить в безопасное место.
 ##nibid keys add <key-name>
 
+
 NETWORK=nibiru-itn-2
 curl -s "https://networks.itn2.nibiru.fi/$NETWORK/genesis" > $HOME/.nibid/config/genesis.json
 
