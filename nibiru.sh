@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# README
+# 1) . <(wget -qO- https://raw.githubusercontent.com/illummina/test/main/nibiru.sh)
+# 2) Enter a moniker name. ONLY LETTERS AND NUMBERS
+# 3) Choose create new wallet or recover existing wallet:
+#    - The program will ask for the phrase generated when creating the wallet. If you don't have this phrase, you won't be able to recover the wallet
+#    - "Enter keyring passphrase" - create and put and SAVE a phrase you want. It will be a key to your wallet.
+# 6) nibid status 2>&1 | jq .SyncInfo
+
 is_valid_moniker() {
     local moniker="$1"
     if [[ "$moniker" =~ ^[A-Z][A-Za-z0-9]*$ && ${#moniker} -le 15 ]]; then
@@ -17,7 +25,7 @@ curl -s "https://get.nibiru.fi/@${NIBIRU_VERSION}!" | bash
 nibid version
 
 while true; do
-    read -p "Enter a moniker name (starts with an uppercase letter, contains only letters and numbers, not longer than 15 characters): " moniker
+    read -p "Enter a moniker name (contains only letters and numbers, not longer than 15 characters): " moniker
 
     if is_valid_moniker "$moniker"; then
         nibid init "$moniker" --chain-id=nibiru-itn-2 --home $HOME/.nibid
@@ -27,12 +35,28 @@ while true; do
     fi
 done
 
-nibid keys add wallet --recover
+while true; do
+    read -p "Choose an option: (1) Create new wallet or (2) Recover existing wallet: " option
+    case $option in
+        1)
+            nibid keys add wallet
+            break
+            ;;
+        2)
+            nibid keys add wallet --recover
+            break
+            ;;
+        *)
+            echo "Invalid option. Please choose (1) or (2)."
+            ;;
+    esac
+done
 
 echo -e "\e[95m"
 echo "*************************************************************"
 echo "*                                                           *"
-echo "*                          IMPORTANT                        *"
+echo "*                      !!! IMPORTANT !!!                    *"
+echo "*                                                           *"
 echo "*     Don't forget to copy the mnemonic phrase generated    *"
 echo "*                  at the top of this script!               *"
 echo "*                         Made with ❤️                       *"
